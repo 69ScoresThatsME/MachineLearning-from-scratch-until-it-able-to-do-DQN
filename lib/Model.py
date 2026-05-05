@@ -10,6 +10,10 @@ class Model:
         self.denses=[]
         self.input=np.array([])
         self.dense_count=0
+        self.isFlattern=False
+
+    def addFlatten(self):
+        self.isFlattern=True
 
     def addDense(self,size,activate_function="relu"):
             self.denses.append(Dense(size,activate_function=activate_function))
@@ -37,6 +41,9 @@ class Model:
         return current_input
     
     def train(self,input,target,round=-1,show=False):
+        if self.isFlattern:
+            input=input.flatten()
+            
         self.insert(input)
         current_round=0
         MSE=0
@@ -67,8 +74,6 @@ class Model:
 
         current_epoch=0
         while current_epoch!=epoch:
-
-            
 
             if clear:
                 os.system("cls")
