@@ -63,29 +63,38 @@ class Model:
                 print("]")
         return MSE
     
-    def fit(self,inputs,target,round=-1,show=False,clear=False):
+    def fit(self,inputs,target,epoch=-1,show=False,clear=False,batch_size=1):
 
-        current_round=0
-        while current_round!=round:
-            current_round+=1
+        current_epoch=0
+        while current_epoch!=epoch:
+
+            
 
             if clear:
                 os.system("cls")
 
             if show:
-                    if round==-1:
-                        print(f"{current_round=} ",end=" [")
+                    if epoch==-1:
+                        print(f"{current_epoch=} ",end=" [")
                     else :
-                        print (f"{current_round=}/{round} ",end=" [")
+                        print (f"{current_epoch=}/{epoch} ",end=" [")
             total_Mse=0
-            for i in range(len(inputs)):
-                total_Mse+=self.train(inputs[i],target[i],round=1)
+            current_epoch+=1
+            for i in range(0,len(inputs),batch_size):
+
+                inputs_batch=inputs[i:i+batch_size]
+                targets_batch=target[i:i+batch_size]
+
+                for i in range(len(inputs_batch)):
+                    total_Mse+=self.train(inputs_batch[i],targets_batch[i],round=1)
+                for dense in reversed(self.denses):
+                    dense.apply_gradient()
                 if show:
                     print(f"=",end="")
             if show:
                 print("]")
                 print(f"MSE={total_Mse/len(inputs)}")
-            if total_Mse/len(inputs)<0.001 and round==-1:
+            if total_Mse/len(inputs)<0.001 and epoch==-1:
                 break
         
     def predict(self,inputs):

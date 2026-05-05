@@ -19,6 +19,6 @@ m=Model()
 m.addDense(size=4,activate_function="tanh")
 m.addDense(size=1,activate_function="sigmoid")
 
-m.fit(np.array(a),np.array(qa),show=True,round=-1,clear=True)
+m.fit(np.array(a),np.array(qa),show=True,epoch=-1,clear=True)
 
 print(m.predict(np.array(a)))

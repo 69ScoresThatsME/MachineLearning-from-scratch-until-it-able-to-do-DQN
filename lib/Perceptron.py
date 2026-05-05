@@ -19,6 +19,9 @@ class Perceptron:
         self.v_bias=0
         self.t=0
         self.learning_rate=0.001
+        self.grads=0
+        self.grads_b=0
+        self.batch_count=0
 
     def status(self,weight=False,bias=False):
         print(f"{self.input.size}")
@@ -43,6 +46,7 @@ class Perceptron:
             self.sum_weight_np=np.ones(self.input.size)
             self.m=np.zeros(self.weight.size)
             self.v=np.zeros(self.weight.size)
+            self.grads=np.zeros(self.input.size)
 
     def sum_weight(self):
         self.sum=0
@@ -106,19 +110,19 @@ class Perceptron:
 
         return self.sum
     
-    def backward(self,delta):
-        d=delta*self.activation_derivation()
+    def apply_gradient(self):
 
-        gradiant = d * self.weight 
+        #Avg Gradiant for Grad
+        self.grads/=self.batch_count
+        self.grads_b/=self.batch_count
 
         # Adam
-
         self.t+=1
 
-        self.m_bias=(0.9*self.m_bias)+(0.1*d)
-        self.v_bias=(0.999*self.v_bias)+(0.001*(d**2))
-        self.m=(0.9*self.m)+(0.1*(d*self.input))
-        self.v=(0.999*self.v)+(0.001*(d*self.input)**2)
+        self.m=(0.9*self.m)+(0.1*self.grads)
+        self.v=(0.999*self.v)+(0.001*(self.grads**2))
+        self.m_bias=(0.9*self.m_bias)+(0.1*(self.grads_b))
+        self.v_bias=(0.999*self.v_bias)+(0.001*(self.grads_b)**2)
 
         #Adam: bias correction?
         m_hat=self.m/(1-0.9**self.t)
@@ -129,7 +133,21 @@ class Perceptron:
         self.weight+=(self.learning_rate*m_hat)/(np.sqrt(v_hat)+1e-8)
         self.bias+=(self.learning_rate*m_hat_b)/(np.sqrt(v_hat_b)+1e-8)
 
-        return gradiant
+
+        # reset gradiant
+        self.grads=np.zeros_like(self.weight)
+        self.grads_b=0
+        self.batch_count=0
+        
+    def backward(self,delta):
+        d=delta*self.activation_derivation()
+        gradient = d * self.weight 
+
+        self.grads+=d*self.input
+        self.grads_b+=d
+        self.batch_count+=1
+
+        return gradient
 
     def train(self,target,show=False,step=1000000):
         self.run()

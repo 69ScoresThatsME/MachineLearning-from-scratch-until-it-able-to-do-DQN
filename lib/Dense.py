@@ -36,6 +36,10 @@ class Dense:
         
         return self.sum_array
     
+    def apply_gradient(self):
+        for perceptron in self.perceptrons:
+            perceptron.apply_gradient()
+
     def backward(self,delta):
         
         gradiant=np.zeros(len(self.input))
