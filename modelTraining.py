@@ -23,15 +23,20 @@ game.play()
 buffer=[]
 current_epoch=0
 
-epsilon=1.0
-epsilon_min=0.1
-epsilon_decay=0.9999
+
 
 load=100000
 model.load(f"models/model_{load}.pkl")
 target.load("models/model_90000.pkl")
 loaded=True
 current_epoch=load
+
+epsilon=1.0
+epsilon_min=0.1
+epsilon_decay=0.2
+if not loaded:
+    epsilon_decay=0.9999
+
 
 while True:
     
@@ -85,8 +90,8 @@ while True:
         print(f"{current_epoch}/{epoch} ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
         print(f"{epsilon=}")
         if loaded:
-            if current_epoch%10000==0 and current_epoch!=load:
-                model.save(f"models/model_{current_epoch}.pkl")
+            if current_epoch%1000==0 and current_epoch!=load:
+                model.save(f"models/model_{current_epoch+load}.pkl")
         # if current_epoch in [10,50,100,500,1000,2000,3000,4000,5000,6200,7500,8400,10000,20000,30000
         #                       ,40000,50000,60000,70000,80000,90000,100000]:
         

@@ -7,5 +7,6 @@ __pycache__/
 .vscode/
 
 # Trained models Recommend 100k+
-models/
+# models/
 model.pkl
+# 

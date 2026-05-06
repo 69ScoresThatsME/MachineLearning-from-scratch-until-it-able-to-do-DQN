@@ -60,4 +60,3 @@ class Dense:
                 print(f"======================= {self.training_round=} ======================= {self.sum_array=}") 
            
         
-

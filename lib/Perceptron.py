@@ -165,6 +165,3 @@ class Perceptron:
             if show:
                 print(f"===== {self.weight=} ====== {self.training_round=} =========== {self.sum=}")
                 
-
-
-

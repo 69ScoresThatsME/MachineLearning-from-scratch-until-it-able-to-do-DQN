@@ -10,7 +10,7 @@ model=Model()
 model.addDense(128,activate_function="sigmoid")
 model.addDense(64,activate_function="sigmoid")
 model.addDense(4,activate_function="linear")
-model.load("models/model_100000.pkl")
+model.load("models/model_120000.pkl")
 
 game=Game()
 game.play()
