@@ -1,8 +1,10 @@
 from lib.Perceptron import *
 from lib.Dense import *
 from typing import Any
+from lib.Conv2d import *
 import numpy as np
 import os
+import pickle
 
 class Model:
 
@@ -10,17 +12,21 @@ class Model:
         self.denses=[]
         self.input=np.array([])
         self.dense_count=0
-        self.isFlattern=False
+        # self.isFlattern=False
+        # self.conv2ds=[]
 
-    def addFlatten(self):
-        self.isFlattern=True
+    # def addConv2d(self,kernel_size:int,kernels:int):
+    #     self.conv2ds.append(Conv2d(kernel_size=kernel_size,kernels=kernels))
+
+    # def addFlatten(self):
+    #     self.isFlattern=True
 
     def addDense(self,size,activate_function="relu"):
             self.denses.append(Dense(size,activate_function=activate_function))
             self.dense_count+=1
             return self
 
-    def insert(self,input_feature)->None:
+    def __insert(self,input_feature)->None:
         compare=np.zeros(2)
 
         if type(input_feature)!=type(compare):
@@ -40,11 +46,12 @@ class Model:
 
         return current_input
     
-    def train(self,input,target,round=-1,show=False):
-        if self.isFlattern:
-            input=input.flatten()
+    def __train(self,input,target,round=-1,show=False):
+
+        # if self.isFlattern:
+        #     input=input.flatten()
             
-        self.insert(input)
+        self.__insert(input)
         current_round=0
         MSE=0
         while current_round!=round:
@@ -91,7 +98,7 @@ class Model:
                 targets_batch=target[i:i+batch_size]
 
                 for i in range(len(inputs_batch)):
-                    total_Mse+=self.train(inputs_batch[i],targets_batch[i],round=1)
+                    total_Mse+=self.__train(inputs_batch[i],targets_batch[i],round=1)
                 for dense in reversed(self.denses):
                     dense.apply_gradient()
                 if show:
@@ -105,9 +112,16 @@ class Model:
     def predict(self,inputs):
         output=[]
         for input in inputs:
-            self.insert(input)
-            output.append([self.run()])
-        
+            self.__insert(input)
+            output.append(self.run())
         return np.array(output)
 
+    def save(self,path="model.pkl"):
+        with open(path,"wb") as f:
+            pickle.dump(self.denses, f)
+        print(f"saved! {path}")
 
+    def load(self,path="model.pkl"):
+        with open(path,"rb") as f:
+            self.denses=pickle.load(f)
+        print(f"loaded! {path}")

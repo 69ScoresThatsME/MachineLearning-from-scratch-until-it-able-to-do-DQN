@@ -80,6 +80,8 @@ class Perceptron:
         #     if self.sum<0:
         #         self.sum=0
 
+        elif self.activate_function=="linear":
+            return self.sum
 
         return self.sum
 
@@ -101,6 +103,8 @@ class Perceptron:
 
         elif self.activate_function=="leaky":
             return 0.01 if z<0 else 1
+        elif self.activate_function=="linear":
+            return 1
         else:
             return 0
 

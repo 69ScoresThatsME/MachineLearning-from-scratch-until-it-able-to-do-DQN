@@ -5,3 +5,7 @@ __pycache__/
 
 # Local VS Code settings
 .vscode/
+
+# Trained models Recommend 100k+
+models/
+model.pkl

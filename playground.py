@@ -1,24 +1,44 @@
-from lib.Perceptron import *
-from lib.Dense import *
 from lib.Model import *
+from game.Game import *
 import numpy as np
+import time
+import os
+
+#Gemini Generate
+
+model=Model()
+model.addDense(128,activate_function="sigmoid")
+model.addDense(64,activate_function="sigmoid")
+model.addDense(4,activate_function="linear")
+model.load("models/model_100000.pkl")
+
+game=Game()
+game.play()
+
+while not game.winning:
+    os.system("cls")
+
+    for row in game.map:
+        print(" ".join(map(str,row)))
+
+    state=game.get_state()
+    predictions=model.predict([state])[0]
+    action=np.argmax(predictions)+1
+    print(game.move)
+    print(f"\nAI Predictions: {predictions}")
+    print(f"AI Decided Action: {action}")
+    
+
+    game.action(action)
+    
+
+    time.sleep(0.3)
 
 
-a=[[1,1],[1,0],[0,1],[0,0]]
-qa=[[0],[1],[1],[0]]
-
-select=0
-
-# d=Dense(size=2,activate_function="relu",learning_rate=0.5)
-# d.insert(np.array(a[select]))
-# d.train(np.array([qa[select],3]),show=True,step=100)
-
-# print(d.run())
-
-m=Model()
-m.addDense(size=4,activate_function="tanh")
-m.addDense(size=1,activate_function="sigmoid")
-
-m.fit(np.array(a),np.array(qa),show=True,epoch=-1,clear=True,batch_size=2)
-
-print(m.predict(np.array(a)))
+os.system("cls")
+for row in game.map:
+    print(" ".join(map(str,row)))
+print("\n" + "="*20)
+print(game.move)
+print("Winningggggggggg")
+print("="*20)
